@@ -1,0 +1,35 @@
+<div class="container">
+    <h1>Items</h1>
+    
+    <% if (items.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Category</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach(item => { %>
+            <tr>
+              <td><%= item.name %></td>
+              <td>$<%= Number(item.price).toFixed(2) %></td>
+              <td><%= item.quantity %></td>
+              <td><%= item.category_name %></td>
+              <td>
+                <a href="/items/<%= item.id %>" class="button">View</a>
+                <a href="/items/<%= item.id %>/edit" class="button">Edit</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No items found.</p>
+    <% } %>
+  
+    <a href="/items/new" class="button primary">Create New Item</a>
+  </div>

@@ -4,7 +4,7 @@ const Category = require('../models/category');
 module.exports = {
   listItems: async (req, res) => {
     try {
-      const items = await Item.getAll();
+      const items = await Item.getAllWithCategory(); // Need to implement this
       res.render('items/index', { items });
     } catch (err) {
       req.flash('error', 'Error loading items');
@@ -25,12 +25,17 @@ module.exports = {
   createItem: async (req, res) => {
     try {
       const { name, description, price, quantity, category_id } = req.body;
-      await Item.create(name, description, price, quantity, category_id);
-      req.flash('success', 'Item created successfully');
-      res.redirect('/items');
+        
+        // Explicit conversion
+        const parsedPrice = parseFloat(price);
+        const parsedQuantity = parseInt(quantity, 10);
+        
+        await Item.create(name, description, parsedPrice, parsedQuantity, category_id);
+        req.flash('success', 'Item created successfully');
+        res.redirect('/items');
     } catch (err) {
-      req.flash('error', 'Error creating item');
-      res.redirect('/items/new');
+        req.flash('error', `Error creating item: ${err.message}`);
+        res.redirect('/items/new');
     }
   },
 

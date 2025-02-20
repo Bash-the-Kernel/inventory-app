@@ -13,6 +13,14 @@ module.exports = {
     return rows[0];
   },
 
+  create: async (name, description) => {
+    const { rows } = await pool.query(
+      'INSERT INTO categories (name, description) VALUES ($1, $2) RETURNING *',
+      [name, description]
+    );
+    return rows[0];
+  },
+
   update: async (id, name, description) => {
     await pool.query(
       'UPDATE categories SET name = $1, description = $2 WHERE id = $3',
