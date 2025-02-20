@@ -25,7 +25,7 @@ module.exports = {
   createItem: async (req, res) => {
     try {
       const { name, description, price, quantity, category_id } = req.body;
-      await Item.create(name, description, parseFloat(price), parseInt(quantity), category_id);
+      await Item.create(name, description, price, quantity, category_id);
       req.flash('success', 'Item created successfully');
       res.redirect('/items');
     } catch (err) {
@@ -45,5 +45,43 @@ module.exports = {
     }
   },
 
-  // Add similar methods for edit/update/delete
+  // MISSING METHODS
+  editItemForm: async (req, res) => {
+    try {
+      const item = await Item.getById(req.params.id);
+      const categories = await Category.getAll();
+      res.render('items/edit', { item, categories });
+    } catch (err) {
+      req.flash('error', 'Item not found');
+      res.redirect('/items');
+    }
+  },
+
+  updateItem: async (req, res) => {
+    try {
+      const { name, description, price, quantity, category_id } = req.body;
+      await Item.update(req.params.id, name, description, price, quantity, category_id);
+      req.flash('success', 'Item updated');
+      res.redirect(`/items/${req.params.id}`);
+    } catch (err) {
+      req.flash('error', 'Update failed');
+      res.redirect(`/items/${req.params.id}/edit`);
+    }
+  },
+
+  deleteItem: async (req, res) => {
+    try {
+      if (req.body.adminPassword !== process.env.ADMIN_PW) {
+        req.flash('error', 'Invalid admin password');
+        return res.redirect(`/items/${req.params.id}`);
+      }
+
+      await Item.delete(req.params.id);
+      req.flash('success', 'Item deleted');
+      res.redirect('/items');
+    } catch (err) {
+      req.flash('error', 'Deletion failed');
+      res.redirect('/items');
+    }
+  }
 };

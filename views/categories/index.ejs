@@ -1,0 +1,31 @@
+<div class="container">
+    <h1>Categories</h1>
+    
+    <% if (categories.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% categories.forEach(category => { %>
+            <tr>
+              <td><%= category.name %></td>
+              <td><%= category.description %></td>
+              <td>
+                <a href="/categories/<%= category.id %>" class="button">View</a>
+                <a href="/categories/<%= category.id %>/edit" class="button">Edit</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No categories found.</p>
+    <% } %>
+  
+    <a href="/categories/new" class="button primary">Create New Category</a>
+  </div>
